@@ -20,7 +20,9 @@ _headers = 'Parameter Value Description Unit'.split()
 _subheaders = 'Min Max Typ Range'.split()
 
 _template = '''
-    <html>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+       "http://www.w3.org/TR/html4/strict.dtd">
+    <html lang="en">
     <head>
         <style type="text/css">
         body {
@@ -37,9 +39,8 @@ _template = '''
         td {
             padding: 5px;
         }
-        .multicol {
-            column-count: 2;
-            height: 500px;
+        .content {
+            column-count: 1;
         }
         </style>
     </head>
@@ -53,8 +54,8 @@ def sample_discrete_normal(low, high):
     Sampling a discrete number in the given range from
     a Gaussian distribution
     '''
-    loc = (high + low)/2
-    scale = (high - low)/2
+    loc = (high + low) / 2
+    scale = (high - low) / 2
     return int(np.random.normal(loc, scale))
 
 def sample_discrete_uniform(low, high):
@@ -64,70 +65,74 @@ def sample_discrete_uniform(low, high):
     '''
     return int(np.random.uniform(low, high))
     
-def create_paragraph(soup, 
-                     word_range = [20, 100],
-                     numerical = False):
+def create_paragraph(soup,
+                     word_range=[20, 100],
+                     numerical=False):
     p = soup.new_tag('p')
     target_length = np.random.randint(*word_range)
     if numerical:
-        lower = 10**target_length
-        higher = 10**(target_length+1)
-        p.string = str(sample_discrete_normal(lower, higher))
+        p.string = ''.join(str(np.random.randint(0, 10)) for i in xrange(target_length))
     else:
-        rand_words = np.random.choice(_words,target_length)
-        p.string =  (' '.join(rand_words)).capitalize()
+        rand_words = np.random.choice(_words, target_length)
+        p.string = (' '.join(rand_words)).capitalize()
     return p
 
 def create_header(soup,
-                  level = 1,
-                  word_range = [2, 6],
-                  all_cap_prob = 0.5):
-    level = max(1,level)
-    level = min(5,level)
-    h = soup.new_tag('h'+str(level)) 
+                  level=1,
+                  word_range=[2, 6],
+                  all_cap_prob=0.5):
+    level = max(1, level)
+    level = min(5, level)
+    h = soup.new_tag('h' + str(level)) 
     target_length = np.random.randint(*word_range)
-    rand_words = np.random.choice(_words,target_length)
+    rand_words = np.random.choice(_words, target_length)
     content = (' '.join(rand_words))
     h.string = content.upper() if np.random.rand() < all_cap_prob else content.title()
     return h
 
 def create_table(soup,
-                 width_range = [2,5],
-                 height_range = [2,8],
-                 cell_char_range = [1, 10],
-                 cell_sub_row_range = [1, 4],
+                 col_range=[2, 5],
+                 row_range=[2, 8],
+                 header_word_range=[1, 5],
+                 header_col_max=1,
+                 header_row_max=1,
+                 value_len_range=[1, 4],
+                 cell_word_range=[1, 10],
+                 cell_sub_row_range=[1, 4],
                  ):
     table = soup.new_tag('table')
     tbody = soup.new_tag('tbody')
     table.append(tbody)
-    rows = sample_discrete_normal(*height_range)
-    columns = sample_discrete_normal(*width_range)
+    rows = sample_discrete_normal(*row_range)
+    columns = sample_discrete_normal(*col_range)
     for r in xrange(rows):
         tr = soup.new_tag('tr')
         for c in xrange(columns):
             td = soup.new_tag('td')
-            p = create_paragraph(soup, [2,5]) if c==0 or r==0 else create_paragraph(soup, [1,4], numerical=True)
+            if c < header_col_max or r < header_row_max:
+                p = create_paragraph(soup, header_word_range)
+            else:
+                p = create_paragraph(soup, value_len_range, numerical=True)
             td.append(p)
             tr.append(td)
         tbody.append(tr)
-    
     return table
 
 # HTML generation pipeline
-def create(head_prob = 0.8):
-    soup = BeautifulSoup(_template,'html.parser')
+def create(head_prob=0.8):
+    soup = BeautifulSoup(_template, 'html.parser')
     if np.random.rand() < head_prob:
-        soup.body.insert(0, create_header(soup, level = 1))
+        soup.body.insert(0, create_header(soup, level=1))
     content = soup.body.div
     content.append(create_paragraph(soup))
     content.append(create_table(soup))
-    return soup.body
+    return soup
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("seed", type=int, default=1337, nargs='?',
                         help="seed to make the generation deterministic")
-    parser.add_argument("-output","-o", default=None, 
+    parser.add_argument("-output", "-o", default=None,
                         help="output directory, defaults to None and print to stdout")
     args = parser.parse_args()
     np.random.seed(args.seed)
@@ -136,7 +141,7 @@ if __name__ == '__main__':
     if args.output is None:
         print generated_html.prettify()
     else:
-        with open(args.output,'w') as outf:
+        with open(args.output, 'w') as outf:
             outf.write(str(generated_html))
     
         
