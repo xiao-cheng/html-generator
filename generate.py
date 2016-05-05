@@ -19,9 +19,7 @@ _headers = 'Parameter Value Description Unit'.split()
 _subheaders = 'Min Max Typ Range'.split()
 
 _template = '''
-    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-       "http://www.w3.org/TR/html4/strict.dtd">
-    <html lang="en">
+    <html>
     <head>
         <style type="text/css">
         body {
