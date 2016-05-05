@@ -102,7 +102,6 @@ def create_table(soup,
     table.append(tbody)
     rows = sample_discrete_normal(*height_range)
     columns = sample_discrete_normal(*width_range)
-
     for r in xrange(rows):
         tr = soup.new_tag('tr')
         for c in xrange(columns):
