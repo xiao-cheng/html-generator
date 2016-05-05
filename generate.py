@@ -3,7 +3,6 @@ Created on May 3, 2016
 
 @author: xiao
 '''
-import argparse
 from numpy.random import RandomState
 from bs4 import BeautifulSoup
 
@@ -174,27 +173,3 @@ def create(seed,
         action()
         
     return soup
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("seed", type=int, default=103, nargs='?',
-                        help="seed to make the generation deterministic")
-    parser.add_argument("-output", "-o", default=None,
-                        help="output directory, defaults to None and print to stdout")
-    parser.add_argument("-batch", type=int, default=None,
-                    help="Generates all htmls with seed from 0 to this number")
-    args = parser.parse_args()
-    seeds = [args.seed] if args.batch is None else xrange(args.batch)
-    if args.batch is not None: args.output = None
-    for seed in seeds:
-        generated_html = create(seed)
-        if args.output is None:
-    #         print generated_html.prettify()
-            with open(str(seed) +'.html', 'w') as outf:
-                outf.write(str(generated_html))
-        else:
-            with open(args.output, 'w') as outf:
-                outf.write(str(generated_html))
-        
-        
-    
