@@ -20,10 +20,7 @@ if __name__ == '__main__':
     if args.batch is not None: args.output = None
     for seed in seeds:
         generated_html = create(seed)
-        if args.output is None:
+        out_file = args.output if args.output else str(seed) + '.html'
     #         print generated_html.prettify()
-            with open(str(seed) + '.html', 'w') as outf:
-                outf.write(str(generated_html))
-        else:
-            with open(args.output, 'w') as outf:
-                outf.write(str(generated_html))
+        with open(out_file, 'w') as outf:
+            outf.write(str(generated_html))
