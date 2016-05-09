@@ -26,6 +26,7 @@ _template = '''
             margin: 2% 5%;
             font-family: Arial, sans-serif;
             background-color: white;
+            font-size: small;
         }
         .fullgrid,
         .fullgrid tr,
@@ -36,11 +37,16 @@ _template = '''
         .outteronly{
             border: 1px solid black;
         }
+        table{
+            -webkit-column-break-inside:avoid;
+            -moz-column-break-inside:avoid;
+            column-break-inside:avoid;
+        }
         td {
             padding: 5px;
         }
         .content {
-            column-count: 1;
+            column-count: 2;
         }
         .bold{
             font-weight: bold;
@@ -48,7 +54,7 @@ _template = '''
         </style>
     </head>
     <body>
-        <div></div>
+        <div class="content"></div>
     </body>
     </html>
 '''
@@ -118,7 +124,7 @@ def create_table(rand,
                  header_word_range=[1, 5],
                  header_col_max=1,
                  header_row_max=1,
-                 header_bold_prob = 0.95,
+                 header_bold_prob = 0.5,
                  value_len_range=[1, 4],
                  cell_word_range=[1, 10],
                  cell_sub_row_range=[1, 4],
@@ -147,7 +153,7 @@ def create_table(rand,
 # HTML generation pipeline
 def create(seed,
            head_prob = 0.8,
-           section_range = [2,5]):
+           section_range = [5,9]):
     '''
     Creates the same html for a given seed
     '''
