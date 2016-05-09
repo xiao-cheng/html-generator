@@ -19,6 +19,7 @@ _headers = 'Parameter Value Description Unit'.split()
 _subheaders = 'Min Max Typ Range'.split()
 
 _template = '''
+    <!DOCTYPE html>
     <html>
     <head>
         <style type="text/css">
@@ -26,7 +27,7 @@ _template = '''
             margin: 2% 5%;
             font-family: Arial, sans-serif;
             background-color: white;
-            font-size: small;
+            font-size: 80%;
         }
         .fullgrid,
         .fullgrid tr,
@@ -39,7 +40,6 @@ _template = '''
         }
         table{
             -webkit-column-break-inside:avoid;
-            -moz-column-break-inside:avoid;
             column-break-inside:avoid;
         }
         td {
@@ -47,6 +47,7 @@ _template = '''
         }
         .content {
             column-count: 2;
+            -webkit-column-count: 2;
         }
         .bold{
             font-weight: bold;
@@ -116,7 +117,7 @@ def create_list(rand,
         list_elem.append(li)
     return list_elem 
 
-_table_styles = ['fullgrid','outteronly','noborder']
+_table_styles = ['fullgrid','outteronly',[]]
 def create_table(rand,
                  soup,
                  row_range=[2, 8],
