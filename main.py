@@ -27,4 +27,5 @@ if __name__ == '__main__':
     #         print generated_html.prettify()
         with open(out_file, 'w') as outf:
             outf.write(str(generated_html))
-    Pool.map(run,seeds)
+    p = Pool(args.parallel)
+    p.map(run,seeds)
