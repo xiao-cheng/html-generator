@@ -16,7 +16,7 @@ if __name__ == '__main__':
                         help = "output directory, defaults to None and print to stdout")
     parser.add_argument("-batch", type = int, default = None,
                     help = "Generates all htmls with seed from 0 to this number")
-    parser.add_argument("-parallel", "-p", default = 4,
+    parser.add_argument("-parallel", "-p", type=int, default = 4,
                         help = "cores to use for parallel generation")
     args = parser.parse_args()
     seeds = [args.seed] if args.batch is None else xrange(args.batch)
