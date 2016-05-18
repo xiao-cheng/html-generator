@@ -45,7 +45,7 @@ _template = '''
         td {
             padding: 5px;
         }
-        .content {
+        .col2 {
             column-count: 2;
             -webkit-column-count: 2;
         }
@@ -55,7 +55,7 @@ _template = '''
         </style>
     </head>
     <body>
-        <div class="content"></div>
+        <div></div>
     </body>
     </html>
 '''
@@ -154,6 +154,7 @@ def create_table(rand,
 # HTML generation pipeline
 def create(seed,
            head_prob = 0.8,
+           two_col_prob = 0.3,
            section_range = [5,9]):
     '''
     Creates the same html for a given seed
@@ -163,6 +164,8 @@ def create(seed,
     if rand.rand() < head_prob:
         soup.body.insert(0, create_header(rand, soup, level=1))
     content = soup.body.div
+    if rand.rand() < two_col_prob:
+        content['class'] = 'col2'
     def append_section(new_elem, header_level = 0):
         div = soup.new_tag('div')
         if header_level > 0:
